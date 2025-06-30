@@ -29,7 +29,7 @@ import Trans from "../Trans";
 import DropdownMenuItem from "../dropdownMenu/DropdownMenuItem";
 import DropdownMenuItemContentRadio from "../dropdownMenu/DropdownMenuItemContentRadio";
 import DropdownMenuItemLink from "../dropdownMenu/DropdownMenuItemLink";
-import { GithubIcon, DiscordIcon, XBrandIcon } from "../icons";
+import { GithubIcon, DiscordIcon, XBrandIcon, EntrustDirectoryIcon } from "../icons";
 import {
   boltIcon,
   DeviceDesktopIcon,
@@ -44,6 +44,7 @@ import {
   TrashIcon,
   usersIcon,
 } from "../icons";
+import { entrustDirectory } from "@excalidraw/excalidraw/data/filesystem";
 
 import "./DefaultItems.scss";
 
@@ -126,6 +127,27 @@ export const SaveAsImage = () => {
   );
 };
 SaveAsImage.displayName = "SaveAsImage";
+
+export const EntrustDirectory = () => {
+  const setAppState = useExcalidrawSetAppState();
+
+  return (
+    <DropdownMenuItem
+      icon={EntrustDirectoryIcon}
+      data-testid="entrust-directory-button"
+      onSelect={() => {
+        if (!entrustDirectory()) {
+          setAppState({ toast: {
+            message: "Your browser does not support the file system api",
+          }})
+        }
+      }}
+    >
+      Entrust Directory
+    </DropdownMenuItem>
+  );
+};
+EntrustDirectory.displayName = "EntrustDirectory";
 
 export const CommandPalette = (opts?: { className?: string }) => {
   const setAppState = useExcalidrawSetAppState();
