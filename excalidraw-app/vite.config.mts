@@ -77,7 +77,11 @@ export default defineConfig(({ mode }) => {
         },
       ],
     },
+    optimizeDeps: {
+      exclude: ["mupdf"],
+    },
     build: {
+      target: "esnext",
       outDir: "build",
       rollupOptions: {
         output: {

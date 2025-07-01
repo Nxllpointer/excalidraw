@@ -460,6 +460,7 @@ import type {
 } from "../types";
 import type { RoughCanvas } from "roughjs/bin/canvas";
 import type { Action, ActionResult } from "../actions/types";
+import { pdfToSvgs } from "../pdf/pdfToSvgs";
 
 const AppContext = React.createContext<AppClassProperties>(null!);
 const AppPropsContext = React.createContext<AppProps>(null!);
@@ -7628,6 +7629,20 @@ class App extends React.Component<AppProps, AppState> {
     addToFrameUnderCursor?: boolean;
     imageFile: File;
   }) => {
+    if (imageFile.type === MIME_TYPES.pdf) {
+      let createImageAtChain = Promise.resolve({ x: sceneX, y: sceneY })
+
+      await pdfToSvgs(imageFile, (svg) => {
+        createImageAtChain = createImageAtChain.then(async ({ x, y }) => {
+          const image = await this.createImageElement({ sceneX: x, sceneY: y, imageFile: svg })
+          return { x: x, y: y + image!.height }
+        })
+      })
+
+      await createImageAtChain
+      return
+    }
+
     const [gridX, gridY] = getGridPoint(
       sceneX,
       sceneY,
