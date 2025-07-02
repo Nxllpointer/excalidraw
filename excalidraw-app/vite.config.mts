@@ -113,6 +113,9 @@ export default defineConfig(({ mode }) => {
       // don't auto-inline small assets (i.e. fonts hosted on CDN)
       assetsInlineLimit: 0,
     },
+    worker: {
+      format: "es"
+    },
     plugins: [
       Sitemap({
         hostname: "https://excalidraw.com",
@@ -144,6 +147,7 @@ export default defineConfig(({ mode }) => {
         },
 
         workbox: {
+          maximumFileSizeToCacheInBytes: 10_000_000,
           // don't precache fonts, locales and separate chunks
           globIgnores: [
             "fonts.css",

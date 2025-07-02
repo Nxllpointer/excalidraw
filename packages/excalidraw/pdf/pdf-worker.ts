@@ -1,7 +1,3 @@
-import { MIME_TYPES } from "@excalidraw/common"
-
-export const WorkerUrl = new URL(import.meta.url)
-
 export interface Request {
   pdf: File,
   fromPage: number
@@ -41,7 +37,7 @@ async function processPdf({ pdf, fromPage }: Request) {
     writer.close()
     writer.destroy()
 
-    const svgFile = new File([buffer.asUint8Array()], `page${pageIndex}.svg`, { type: MIME_TYPES.svg })
+    const svgFile = new File([buffer.asUint8Array()], `page${pageIndex}.svg`, { type: "image/svg+xml" })
 
     buffer.destroy()
 

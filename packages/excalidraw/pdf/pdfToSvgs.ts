@@ -1,4 +1,5 @@
-import { WorkerUrl, Request, Response } from "./pdf-worker.chunk"
+import { Request, Response } from "./pdf-worker"
+import PdfWorker from "./pdf-worker?worker"
 
 /*
  * We use a web worker for converting the PDF to individual SVGs.
@@ -15,7 +16,7 @@ export const pdfToSvgs = (
   let isRetry = false;
 
   const tryRun = () => {
-    let worker = new Worker(WorkerUrl, { type: "module" })
+    let worker = new PdfWorker()
     worker.onmessage = ({ data: message }: MessageEvent<Response>) => {
       if (message.converting) {
         fromPage = message.converting.pageIndex
@@ -31,6 +32,7 @@ export const pdfToSvgs = (
     }
     worker.onerror = (event) => {
       if (isRetry) {
+        console.log("PDF worker failed twice", event.error)
         reject(event.error)
       }
       else {
