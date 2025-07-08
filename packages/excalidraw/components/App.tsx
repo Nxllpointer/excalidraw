@@ -7628,10 +7628,12 @@ class App extends React.Component<AppProps, AppState> {
     sceneX,
     sceneY,
     addToFrameUnderCursor = true,
+    fixedScale,
     imageFile,
   }: {
     sceneX: number;
     sceneY: number;
+    fixedScale?: number;
     addToFrameUnderCursor?: boolean;
     imageFile: File;
   }) => {
@@ -7640,7 +7642,7 @@ class App extends React.Component<AppProps, AppState> {
 
       await pdfToSvgs(imageFile, (svg) => {
         createImageAtChain = createImageAtChain.then(async ({ x, y }) => {
-          const image = await this.createImageElement({ sceneX: x, sceneY: y, imageFile: svg })
+          const image = await this.createImageElement({ sceneX: x, sceneY: y, fixedScale: 4.0, imageFile: svg })
           return { x: x, y: y + image!.height }
         })
       })
@@ -7687,6 +7689,7 @@ class App extends React.Component<AppProps, AppState> {
     const initializedImageElement = await this.insertImageElement(
       placeholderImageElement,
       imageFile,
+      fixedScale
     );
 
     return initializedImageElement;
@@ -9825,6 +9828,7 @@ class App extends React.Component<AppProps, AppState> {
   private initializeImage = async (
     placeholderImageElement: ExcalidrawImageElement,
     imageFile: File,
+    fixedScale?: number,
   ) => {
     // at this point this should be guaranteed image file, but we do this check
     // to satisfy TS down the line
@@ -9929,6 +9933,7 @@ class App extends React.Component<AppProps, AppState> {
             const naturalDimensions = this.getImageNaturalDimensions(
               initializedImageElement,
               imageHTML,
+              fixedScale,
             );
 
             // no need to create a new instance anymore, just assign the natural dimensions
@@ -9970,6 +9975,7 @@ class App extends React.Component<AppProps, AppState> {
   private insertImageElement = async (
     placeholderImageElement: ExcalidrawImageElement,
     imageFile: File,
+    fixedScale?: number,
   ) => {
     // we should be handling all cases upstream, but in case we forget to handle
     // a future case, let's throw here
@@ -9984,6 +9990,7 @@ class App extends React.Component<AppProps, AppState> {
       const initializedImageElement = await this.initializeImage(
         placeholderImageElement,
         imageFile,
+        fixedScale,
       );
 
       const nextElements = this.scene
@@ -10070,16 +10077,21 @@ class App extends React.Component<AppProps, AppState> {
   private getImageNaturalDimensions = (
     imageElement: ExcalidrawImageElement,
     imageHTML: HTMLImageElement,
+    fixedScale?: number,
   ) => {
-    const minHeight = Math.max(this.state.height - 120, 160);
-    // max 65% of canvas height, clamped to <300px, vh - 120px>
-    const maxHeight = Math.min(
-      minHeight,
-      Math.floor(this.state.height * 0.5) / this.state.zoom.value,
-    );
+    let height = imageHTML.naturalHeight * (fixedScale || 1.0);
+    let width = imageHTML.naturalWidth * (fixedScale || 1.0);
+    if (!fixedScale) {
+      const minHeight = Math.max(this.state.height - 120, 160);
+      // max 65% of canvas height, clamped to <300px, vh - 120px>
+      const maxHeight = Math.min(
+        minHeight,
+        Math.floor(this.state.height * 0.5) / this.state.zoom.value,
+      );
 
-    const height = Math.min(imageHTML.naturalHeight, maxHeight);
-    const width = height * (imageHTML.naturalWidth / imageHTML.naturalHeight);
+      height = Math.min(imageHTML.naturalHeight, maxHeight);
+      width = height * (imageHTML.naturalWidth / imageHTML.naturalHeight);
+    }
 
     // add current imageElement width/height to account for previous centering
     // of the placeholder image
