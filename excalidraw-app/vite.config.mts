@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
   const envVars = loadEnv(mode, `../`);
   // https://vitejs.dev/config/
   return {
+    base: "excalidraw",
     server: {
       port: Number(envVars.VITE_APP_PORT || 3000),
       // open the browser
@@ -232,7 +233,7 @@ export default defineConfig(({ mode }) => {
               type: "image/png",
             },
           ],
-          start_url: "/",
+          start_url: "/excalidraw",
           id: "excalidraw",
           display: "standalone",
           theme_color: "#121212",
