@@ -1,5 +1,5 @@
 export interface Request {
-  pdf: File,
+  pdf: ArrayBuffer,
   fromPage: number
 }
 
@@ -17,7 +17,7 @@ async function processPdf({ pdf, fromPage }: Request) {
   // @ts-ignore
   let mupdf = await import("mupdf")
 
-  const document = mupdf.Document.openDocument(await pdf.arrayBuffer())
+  const document = mupdf.Document.openDocument(pdf)
   const pageCount = document.countPages()
 
   for (let pageIndex = fromPage; pageIndex < pageCount; pageIndex++) {
