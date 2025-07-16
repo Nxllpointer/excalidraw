@@ -15,7 +15,7 @@ export const pdfToSvgs = (
   let fromPage = 0
   let isRetry = false;
 
-  const tryRun = () => {
+  const tryRun = (pdf: ArrayBuffer) => {
     let worker = new PdfWorker()
     worker.onmessage = ({ data: message }: MessageEvent<Response>) => {
       if (message.converting) {
@@ -39,13 +39,13 @@ export const pdfToSvgs = (
         worker.terminate()
         isRetry = true
         console.log("Respawning PDF worker")
-        tryRun()
+        tryRun(pdf)
       }
     }
 
     worker.postMessage({ pdf, fromPage } as Request)
   }
 
-  tryRun()
+  pdf.arrayBuffer().then(pdf => tryRun(pdf))
 })
 
