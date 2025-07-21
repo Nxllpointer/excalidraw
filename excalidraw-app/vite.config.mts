@@ -240,7 +240,7 @@ export default defineConfig(({ mode }) => {
           background_color: "#ffffff",
           file_handlers: [
             {
-              action: "/",
+              action: "/excalidraw",
               accept: {
                 "application/vnd.excalidraw+json": [".excalidraw"],
               },
