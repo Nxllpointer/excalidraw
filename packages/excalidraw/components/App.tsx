@@ -392,6 +392,8 @@ import { LassoTrail } from "../lasso";
 
 import { EraserTrail } from "../eraser";
 
+import { pdfToSvgs } from "../pdf/pdfToSvgs";
+
 import ConvertElementTypePopup, {
   getConversionTypeFromElements,
   convertElementTypePopupAtom,
@@ -460,7 +462,6 @@ import type {
 } from "../types";
 import type { RoughCanvas } from "roughjs/bin/canvas";
 import type { Action, ActionResult } from "../actions/types";
-import { pdfToSvgs } from "../pdf/pdfToSvgs";
 
 const AppContext = React.createContext<AppClassProperties>(null!);
 const AppPropsContext = React.createContext<AppProps>(null!);
@@ -6898,9 +6899,7 @@ class App extends React.Component<AppProps, AppState> {
   public handleCanvasZoomUsingZDrag = (
     event: React.PointerEvent<HTMLElement> | MouseEvent,
   ): boolean => {
-    if (
-      event.button === POINTER_BUTTON.WHEEL || !isHoldingZ
-    ) {
+    if (event.button === POINTER_BUTTON.WHEEL || !isHoldingZ) {
       return false;
     }
     isZooming = true;
@@ -7723,17 +7722,22 @@ class App extends React.Component<AppProps, AppState> {
     imageFile: File;
   }) => {
     if (imageFile.type === MIME_TYPES.pdf) {
-      let createImageAtChain = Promise.resolve({ x: sceneX, y: sceneY })
+      let createImageAtChain = Promise.resolve({ x: sceneX, y: sceneY });
 
       await pdfToSvgs(imageFile, (svg) => {
         createImageAtChain = createImageAtChain.then(async ({ x, y }) => {
-          const image = await this.createImageElement({ sceneX: x, sceneY: y, fixedScale: 4.0, imageFile: svg })
-          return { x: x, y: y + image!.height }
-        })
-      })
+          const image = await this.createImageElement({
+            sceneX: x,
+            sceneY: y,
+            fixedScale: 4.0,
+            imageFile: svg,
+          });
+          return { x, y: y + image!.height };
+        });
+      });
 
-      await createImageAtChain
-      return
+      await createImageAtChain;
+      return;
     }
 
     const [gridX, gridY] = getGridPoint(
@@ -7774,7 +7778,7 @@ class App extends React.Component<AppProps, AppState> {
     const initializedImageElement = await this.insertImageElement(
       placeholderImageElement,
       imageFile,
-      fixedScale
+      fixedScale,
     );
 
     return initializedImageElement;

@@ -2,6 +2,8 @@ import clsx from "clsx";
 
 import { THEME } from "@excalidraw/common";
 
+import { entrustDirectory } from "@excalidraw/excalidraw/data/filesystem";
+
 import type { Theme } from "@excalidraw/element/types";
 
 import {
@@ -29,7 +31,12 @@ import Trans from "../Trans";
 import DropdownMenuItem from "../dropdownMenu/DropdownMenuItem";
 import DropdownMenuItemContentRadio from "../dropdownMenu/DropdownMenuItemContentRadio";
 import DropdownMenuItemLink from "../dropdownMenu/DropdownMenuItemLink";
-import { GithubIcon, DiscordIcon, XBrandIcon, EntrustDirectoryIcon } from "../icons";
+import {
+  GithubIcon,
+  DiscordIcon,
+  XBrandIcon,
+  EntrustDirectoryIcon,
+} from "../icons";
 import {
   boltIcon,
   DeviceDesktopIcon,
@@ -44,7 +51,6 @@ import {
   TrashIcon,
   usersIcon,
 } from "../icons";
-import { entrustDirectory } from "@excalidraw/excalidraw/data/filesystem";
 
 import "./DefaultItems.scss";
 
@@ -137,9 +143,11 @@ export const EntrustDirectory = () => {
       data-testid="entrust-directory-button"
       onSelect={() => {
         if (!entrustDirectory()) {
-          setAppState({ toast: {
-            message: "Your browser does not support the file system api",
-          }})
+          setAppState({
+            toast: {
+              message: "Your browser does not support the file system api",
+            },
+          });
         }
       }}
     >

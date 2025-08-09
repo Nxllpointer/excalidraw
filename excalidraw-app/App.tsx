@@ -137,8 +137,9 @@ import { ExcalidrawPlusIframeExport } from "./ExcalidrawPlusIframeExport";
 
 import "./index.scss";
 
-import type { CollabAPI } from "./collab/Collab";
 import { usePwaOpenedFile } from "./file-handler";
+
+import type { CollabAPI } from "./collab/Collab";
 
 polyfill();
 
@@ -374,7 +375,7 @@ const ExcalidrawWrapper = () => {
   });
   const collabError = useAtomValue(collabErrorIndicatorAtom);
 
-  const openedFile = usePwaOpenedFile()
+  const openedFile = usePwaOpenedFile();
 
   useHandleLibrary({
     excalidrawAPI,
@@ -401,15 +402,22 @@ const ExcalidrawWrapper = () => {
   }, [excalidrawAPI]);
 
   useEffect(() => {
-    if (!excalidrawAPI || !openedFile) return;
-
-    async function loadOpenedFile() {
-      let openedScene = await loadFromBlob(openedFile!!.blob, null, null, openedFile!!.fileHandle);
-      excalidrawAPI?.updateScene(openedScene)
+    if (!excalidrawAPI || !openedFile) {
+      return;
     }
 
-    loadOpenedFile()
-  }, [openedFile, excalidrawAPI])
+    async function loadOpenedFile() {
+      const openedScene = await loadFromBlob(
+        openedFile!!.blob,
+        null,
+        null,
+        openedFile!!.fileHandle,
+      );
+      excalidrawAPI?.updateScene(openedScene);
+    }
+
+    loadOpenedFile();
+  }, [openedFile, excalidrawAPI]);
 
   useEffect(() => {
     if (!excalidrawAPI || (!isCollabDisabled && !collabAPI)) {
