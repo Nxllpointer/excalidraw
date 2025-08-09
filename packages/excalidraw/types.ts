@@ -340,11 +340,11 @@ export interface AppState {
   currentItemRoundness: StrokeRoundness;
   currentItemArrowType: "sharp" | "round" | "elbow";
   eraserTargets: {
-    freedraw: boolean,
-    shape: boolean,
-    text: boolean,
-    image: boolean
-  },
+    freedraw: boolean;
+    shape: boolean;
+    text: boolean;
+    image: boolean;
+  };
   viewBackgroundColor: string;
   scrollX: number;
   scrollY: number;

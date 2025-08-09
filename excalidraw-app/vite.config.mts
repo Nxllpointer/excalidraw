@@ -240,12 +240,17 @@ export default defineConfig(({ mode }) => {
           background_color: "#ffffff",
           file_handlers: [
             {
-              action: "/excalidraw",
+              action: "/excalidraw?open-file",
               accept: {
                 "application/vnd.excalidraw+json": [".excalidraw"],
+                "application/vnd.excalidraw+svg": [".excalidraw.svg"],
+                "image/svg+xml": [".svg"],
               },
             },
           ],
+          launch_handler: {
+            client_mode: "focus-existing"
+          },
           share_target: {
             action: "/web-share-target",
             method: "POST",

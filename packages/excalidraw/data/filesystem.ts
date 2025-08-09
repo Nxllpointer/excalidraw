@@ -110,11 +110,11 @@ export const fileSave = (
 
 export const entrustDirectory = () => {
   if (nativeFileSystemSupported) {
-    window.showDirectoryPicker({ mode: "readwrite" })
-    return true
+    window.showDirectoryPicker({ mode: "readwrite" });
+    return true;
   }
-   else return false
-}
+  return false;
+};
 
 export { nativeFileSystemSupported };
 export type { FileSystemHandle };

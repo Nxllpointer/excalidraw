@@ -250,7 +250,7 @@ export const IMAGE_MIME_TYPES = {
   ico: "image/x-icon",
   avif: "image/avif",
   jfif: "image/jfif",
-  pdf: "application/pdf"
+  pdf: "application/pdf",
 } as const;
 
 export const MIME_TYPES = {
