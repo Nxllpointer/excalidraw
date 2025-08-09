@@ -2290,22 +2290,6 @@ class App extends React.Component<AppProps, AppState> {
   );
 
   private initializeScene = async () => {
-    if ("launchQueue" in window && "LaunchParams" in window) {
-      (window as any).launchQueue.setConsumer(
-        async (launchParams: { files: any[] }) => {
-          if (!launchParams.files.length) {
-            return;
-          }
-          const fileHandle = launchParams.files[0];
-          const blob: Blob = await fileHandle.getFile();
-          this.loadFileToCanvas(
-            new File([blob], blob.name || "", { type: blob.type }),
-            fileHandle,
-          );
-        },
-      );
-    }
-
     if (this.props.theme) {
       this.setState({ theme: this.props.theme });
     }
@@ -2552,7 +2536,6 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   public componentWillUnmount() {
-    (window as any).launchQueue?.setConsumer(() => {});
     this.renderer.destroy();
     this.scene.destroy();
     this.scene = new Scene();
