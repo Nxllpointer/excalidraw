@@ -13,7 +13,6 @@ export default defineConfig(({ mode }) => {
   const envVars = loadEnv(mode, `../`);
   // https://vitejs.dev/config/
   return {
-    base: "excalidraw",
     server: {
       port: Number(envVars.VITE_APP_PORT || 3000),
       // open the browser
@@ -247,14 +246,14 @@ export default defineConfig(({ mode }) => {
               type: "image/png",
             },
           ],
-          start_url: "/excalidraw",
+          start_url: "/",
           id: "excalidraw",
           display: "standalone",
           theme_color: "#121212",
           background_color: "#ffffff",
           file_handlers: [
             {
-              action: "/excalidraw?open-file",
+              action: "/?open-file",
               accept: {
                 "application/vnd.excalidraw+json": [".excalidraw"],
                 "application/vnd.excalidraw+svg": [".excalidraw.svg"],
