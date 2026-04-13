@@ -2254,6 +2254,8 @@ class App extends React.Component<AppProps, AppState> {
 
   private onBlur = withBatchedUpdates(() => {
     isHoldingSpace = false;
+    isHoldingZ = false;
+    isZooming = false;
     this.setState({ isBindingEnabled: true });
   });
 
@@ -4489,7 +4491,7 @@ class App extends React.Component<AppProps, AppState> {
         event.preventDefault();
       }
 
-      if (event.key === KEYS.Z && gesture.pointers.size === 0) {
+      if (event.key === KEYS.Z && gesture.pointers.size === 0 && !event[KEYS.CTRL_OR_CMD] && !event.altKey && !event.shiftKey) {
         isHoldingZ = true;
         if (!isHoldingSpace) {
           setCursor(this.interactiveCanvas, CURSOR_TYPE.ZOOM_IN);
@@ -4611,7 +4613,7 @@ class App extends React.Component<AppProps, AppState> {
       }
       isHoldingSpace = false;
     }
-    if (event.key === KEYS.Z) {
+    if (event.key.toLowerCase() === KEYS.Z) {
       if (this.state.viewModeEnabled) {
         setCursor(this.interactiveCanvas, CURSOR_TYPE.GRAB);
       } else if (this.state.activeTool.type === "selection") {
